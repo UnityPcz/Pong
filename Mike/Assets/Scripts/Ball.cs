@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-   
-    [SerializeField]
-    float speed;
 
+    [SerializeField]
+    float speed = 10;
     float radius;
     Vector2 direction;
     int playerLeft;
     int playerRight;
+    private Rigidbody2D rb2d;
+    private Vector2 vel;
 
     // Use this for initialization
     void Start()
@@ -22,33 +23,6 @@ public class Ball : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         GoBall();
     }
-    
-    
-    
-    //**************************************************
-    private Rigidbody2D rb2d;
-    private Vector2 vel;
-
-    void GoBall()
-    {
-        direction = Vector2.one.normalized; //direction is (1,1) normalized 
-        radius = transform.localScale.x / 2; //half the width
-       
-    }
-    void ResetBall()
-    {
-        vel = Vector2.zero;
-        rb2d.velocity = vel;
-        transform.position = Vector2.zero;
-    }
-    void RestartGame()
-    {
-        ResetBall();
-        
-    }
-
-    //**************************************************
-
 
     // Update is called once per frame
     void Update()
@@ -66,27 +40,56 @@ public class Ball : MonoBehaviour
         }
 
         //Game over 
-        if(transform.position.x < GameMenager.bottomLeft.x + radius && direction.x < 0)
+        if (transform.position.x < GameMenager.bottomLeft.x + radius && direction.x < 0)
         {
             playerRight++;
-            Debug.Log(playerRight);
+            Debug.Log("Right player: "+playerRight+ "   Left player: "+playerLeft);
+            EndGame();
             NewService();
 
         }
         if (transform.position.x > GameMenager.topRight.x - radius && direction.x > 0)
         {
             playerLeft++;
-            Debug.Log(playerLeft);
+            Debug.Log("Right player: " + playerRight + "   Left player: " + playerLeft);
+            EndGame();
             NewService();
         }
     }
 
+    //Metods
+    void GoBall()
+    {
+        direction = Vector2.one.normalized; //direction is (1,1) normalized 
+        radius = transform.localScale.x / 2; //half the width
+
+    }
+    void ResetBall()
+    {
+        vel = Vector2.zero;
+        rb2d.velocity = vel;
+        transform.position = Vector2.zero;
+    }
     void NewService()
     {
-        RestartGame();
-   
-    }
+        ResetBall();
 
+    }
+    void EndGame()
+    {
+        if(playerLeft >= 3)
+        {
+            Debug.Log("*****    Left player WIN    *****");
+            speed = 0;
+
+        }
+        else if(playerRight >=3)
+        {
+            Debug.Log("*****    Right player WIN    *****");
+            speed = 0;
+        }
+        
+    }
     //flip direction
     void OnTriggerEnter2D(Collider2D other)
     {

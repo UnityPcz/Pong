@@ -24,6 +24,8 @@ public class GameMenager : MonoBehaviour {
         Paddle paddle2 = Instantiate(paddle) as Paddle;
         paddle1.Init(true);
         paddle2.Init(false);
+
+        
     }
 	
 	// Update is called once per frame
